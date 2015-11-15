@@ -33,7 +33,14 @@ public class CommandHandler {
 
 		eventStore.consumer(CreateOrdrItemCommand.class, message -> {
 			CreateOrdrItemCommand createCommand = Json.decodeValue(message.body(), CreateOrdrItemCommand.class);
-			OrdrItemCreatedEvent createdEvent = new OrdrItemCreatedEvent(createCommand.getId(), createCommand.getName(), createCommand.getOrdrId());
+			OrdrItemCreatedEvent createdEvent
+					= new OrdrItemCreatedEvent(
+					createCommand.getId(),
+					createCommand.getName(),
+					createCommand.getOrdrId(),
+					createCommand.getAmount(),
+					createCommand.getSinglePrice()
+			);
 			eventStore.publish(createdEvent, OrdrItemCreatedEvent.class)
 					.subscribe(event -> {
 						String id = event.getOrdrId();

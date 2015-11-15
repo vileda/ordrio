@@ -50,7 +50,9 @@ public class CreateOrdrCommandResourceTest {
 		String ordrLink = jsonObject.getJsonArray("links").getJsonObject(1).getString("href");
 		List<NameValuePair> params = new ArrayList<>(Arrays.asList(
 				new BasicNameValuePair("name", "testitem1"),
-				new BasicNameValuePair("ordrId", jsonObject.getString("id"))
+				new BasicNameValuePair("ordrId", jsonObject.getString("id")),
+				new BasicNameValuePair("amount", "2.3"),
+				new BasicNameValuePair("singlePrice", "2.3")
 		));
 		execute = post(ordrLink, params);
 		jsonObject = new JsonObject(IOUtils.toString(execute.getEntity().getContent()));
@@ -63,6 +65,8 @@ public class CreateOrdrCommandResourceTest {
 		assertThat(items.size(), is(1));
 		JsonObject item = items.getJsonObject(0);
 		assertThat(item.getString("name"), is("testitem1"));
+		System.out.println(item.encodePrettily());
+		assertThat(item.getDouble("totalPrice"), is(5.29));
 	}
 
 	private void assertPostCreateOrdr(HttpResponse execute, String name) throws IOException {
