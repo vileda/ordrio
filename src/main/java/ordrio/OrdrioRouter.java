@@ -70,6 +70,7 @@ public class OrdrioRouter extends AbstractVerticle {
 		});
 
 		final StaticHandler staticHandler = StaticHandler.create();
+		staticHandler.setCachingEnabled(false);
 		router.get().pathRegex(STATIC_PATH_REGEX).handler(staticHandler);
 
 		new CommandHandler(eventStore);

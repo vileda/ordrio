@@ -3,23 +3,35 @@ $(function () {
 	var wsUrl = window.location.protocol + '//' + window.location.hostname + wsPort;
 	var sock = new SockJS(wsUrl+'/socket');
 
+	$('#create-ordr-form').submit(function(e) {
+		e.preventDefault();
+		var formData = $(e.target).serialize();
+		$.post('/api/ordr', formData)
+		.success(function(data) {
+			window.location.href = '/o/'+JSON.parse(data).id;
+		});
+	});
+
+	if(window.location.pathname === '/') {
+		$('#create-ordr').removeClass('hidden');
+	}
+	else if(stringStartsWith(window.location.pathname, '/o/')) {
+		$('#ordr').removeClass('hidden');
+	}
+
 	sock.onopen = function() {
 		console.log('open');
 	};
 
 	sock.onmessage = function(e) {
 		var aggregate = JSON.parse(e.data);
-		$('#incomingTotal').text(aggregate.incomingTotal);
 	};
 
 	sock.onclose = function() {
 		console.log('close');
 	};
-
-	var id = window.location.pathname.split('/');
-	$.getJSON('/api/aggregate/dashboard/' + id[id.length - 1])
-		.done(function(aggregate) {
-			$('#incomingTotal').text(aggregate.incomingTotal);
-		});
 });
 
+function stringStartsWith (string, prefix) {
+	return string.slice(0, prefix.length) == prefix;
+}
