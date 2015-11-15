@@ -48,8 +48,7 @@ public class CreateOrdrCommandResourceTest {
 		HttpResponse execute = postCreateOrdr(name);
 		JsonObject jsonObject = new JsonObject(IOUtils.toString(execute.getEntity().getContent()));
 		String ordrLink = jsonObject.getJsonArray("links").getJsonObject(1).getString("href");
-		List<NameValuePair> params
-				= new ArrayList<>(Arrays.asList(
+		List<NameValuePair> params = new ArrayList<>(Arrays.asList(
 				new BasicNameValuePair("name", "testitem1"),
 				new BasicNameValuePair("ordrId", jsonObject.getString("id"))
 		));
